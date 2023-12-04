@@ -2,7 +2,10 @@ import streamlit as st
 import pickle
 import re
 import nltk
-
+print(st.__version__)
+print(pickle.__version__)
+print(re.__version__)
+print(nltk.__version__)
 nltk.download('punkt')
 nltk.download('stopwords')
 
