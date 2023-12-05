@@ -3,7 +3,7 @@ import pickle
 import re
 import nltk
 from summarizer import Summarizer
-
+import torch
 
 nltk.download('punkt')
 nltk.download('stopwords')
