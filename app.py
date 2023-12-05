@@ -2,10 +2,12 @@ import streamlit as st
 import pickle
 import re
 import nltk
+from summarizer import Summarizer
+import torch
 
 nltk.download('punkt')
 nltk.download('stopwords')
-
+image = "/Users/yashuvaishu/Desktop/resumeimg.jpeg"
 #loading models
 model = pickle.load(open('model.pkl','rb'))
 
@@ -18,20 +20,28 @@ def clean_resume(resume_text):
     clean_text = re.sub(r'[^\x00-\x7f]', r' ', clean_text)
     clean_text = re.sub('\s+', ' ', clean_text)
     return clean_text
+
+
 # web app
 def main():
+    
     st.title("Resume Screening App")
+    st.image(image=image)
     uploaded_file = st.file_uploader('Upload Resume', type=['txt'])
 
     if uploaded_file is not None:
             resume_bytes = uploaded_file.read()
             resume_text = resume_bytes.decode('latin-1')
+        
+           
 
             word_vectorizer = pickle.load(open('word_vectorizer.pkl','rb'))
             clean = clean_resume(resume_text)
             input_features = word_vectorizer.transform([clean])
             prediction_id =  model.predict(input_features)[0]
             st.write(prediction_id)
+            
+           
 
             # Map category ID to category name
             category_mapping = {
@@ -65,6 +75,9 @@ def main():
             category_name = category_mapping.get(prediction_id)
 
             st.write("Predicted Category:", category_name)
+            bert_summarizer = Summarizer()
+            summary = bert_summarizer(resume_text)
+            st.write(summary)
 
 
 
